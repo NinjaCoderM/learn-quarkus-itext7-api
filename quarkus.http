@@ -1,0 +1,33 @@
+###
+GET http://localhost:8080/pdf/greet
+
+<> 2024-12-09T075740.200.txt
+
+###
+POST http://localhost:8080/pdf/edit
+Content-Type: application/json
+
+{
+  "file2Edit": "original.pdf",
+  "pageNumber": 2,
+  "replaceCount": 1,
+  "replacement": "replacement.pdf"
+}
+
+<> 2024-12-09T075948.200.json
+<> 2024-12-09T075939.403.json
+<> 2024-12-09T075923.404.json
+<> 2024-12-09T075745.200.json
+<> 2024-12-09T075510.200.json
+###
+
+
+
+
+
+
+
+
+
+
+
