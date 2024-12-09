@@ -19,10 +19,10 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
+@SuppressWarnings({"resource", "AccessStaticViaInstance"})
 class PdfResourceTest {
 
     private static final String BASE_DIR = "src/test/resources/pdf";
@@ -45,7 +45,7 @@ class PdfResourceTest {
         // Initialize the mocks
         mockEditor = mock(PdfPageEditor.class);
         mockPdfUtils = mock(PdfUtils.class);
-        pdfResource = new PdfResource(mockEditor, mockPdfUtils);
+        pdfResource = new PdfResource(mockEditor);
     }
 
     @Test
@@ -62,8 +62,8 @@ class PdfResourceTest {
 
             mockedStatic2.when(() -> Files.exists(any(Path.class))).thenReturn(true);
 
-            mockedStatic.when(() -> PdfUtils.getPdfAsByteArray(baseDir, request.getReplacement())).thenReturn(mockReplacementPage);
-            mockedStatic.when(() -> PdfUtils.getPdfAsByteArray(baseDir, request.getFile2Edit())).thenReturn(mockFile2EditPage);
+            mockedStatic.when(() -> PdfUtils.getPdfAsByteArray(baseDir, request.replacement())).thenReturn(mockReplacementPage);
+            mockedStatic.when(() -> PdfUtils.getPdfAsByteArray(baseDir, request.file2Edit())).thenReturn(mockFile2EditPage);
             when(mockEditor.replacePage(any(), any(), any(), any())).thenReturn(mockProcessedPdf);
 
             Response response = pdfResource.editPdf(request);
@@ -71,7 +71,7 @@ class PdfResourceTest {
             assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
             PdfResource.PdfEditResponse responseBody = (PdfResource.PdfEditResponse) response.getEntity();
             assertEquals("fileToEdit_modified_" + LocalDateTime.now().toString().substring(0, 19).replace(":", "-") + ".pdf",
-                    responseBody.getModifiedFileName());
+                    responseBody.modifiedFileName());
 
             verify(mockPdfUtils).savePdf(eq(mockProcessedPdf), any());
         }
@@ -79,7 +79,7 @@ class PdfResourceTest {
     }
 
     @Test
-    void testEditPdf_InvalidPath() throws IOException {
+    void testEditPdf_InvalidPath()  {
         PdfResource.PdfEditRequest request = new PdfResource.PdfEditRequest("../fileToEdit.pdf", 1, 1, "replacement.pdf");
 
         Response response = pdfResource.editPdf(request);
@@ -89,7 +89,7 @@ class PdfResourceTest {
     }
 
     @Test
-    void testEditPdf_FileNotFound() throws IOException {
+    void testEditPdf_FileNotFound() {
         PdfResource.PdfEditRequest request = new PdfResource.PdfEditRequest("fileToEdit.pdf", 1, 1, "replacement.pdf");
 
         Response response = pdfResource.editPdf(request);

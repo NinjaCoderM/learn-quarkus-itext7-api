@@ -4,15 +4,16 @@ import at.codecrafters.itext.base.PdfBaseDocument;
 import at.codecrafters.itext.letter.data.KundenInfoData;
 import com.itextpdf.layout.element.Paragraph;
 
+@SuppressWarnings("ALL")
 public class KundenInfoPdf extends PdfBaseDocument {
 
     @Override
     protected void render() throws Exception {
         addLogo();
         KundenInfoData data = (KundenInfoData) obj;
-        addDefaultAdressBlock(data.getDocId(), data.getErstellungsDatum(), data.getRecipientAddressLines());
+        addDefaultAdressBlock(data.docId(), data.erstellungsDatum(), data.getRecipientAddressLines());
 
-        document.add(new Paragraph("Sehr geehrter Herr " + data.getRecipientName() + ",")
+        document.add(new Paragraph("Sehr geehrter Herr " + data.recipientName() + ",")
                 .setFontSize(12)
                 .setBold()
                 .setMarginTop(200));

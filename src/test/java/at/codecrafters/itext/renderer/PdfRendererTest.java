@@ -4,13 +4,11 @@ import at.codecrafters.itext.base.PdfUtils;
 import at.codecrafters.itext.letter.LetterFactory;
 import at.codecrafters.itext.letter.LetterType;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 

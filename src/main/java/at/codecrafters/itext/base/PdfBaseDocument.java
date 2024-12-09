@@ -24,13 +24,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public abstract class PdfBaseDocument {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private String SENDER[] = new String[] { "CodeFactory", "Triester Straße 40 / 6 / 504, 1100 Wien", "Österreich", " ", "Telefon +43(0)... DW {0}", "Fax +43(0)... DW {1}", "", "wien.m.scheibelreiter@gmail.com" };
+    private final String[] SENDER = new String[] { "CodeFactory", "Triester Straße 40 / 6 / 504, 1100 Wien", "Österreich", " ", "Telefon +43(0)... DW {0}", "Fax +43(0)... DW {1}", "", "{2}" };
 
-    private static Image imgLogo = null;
-    private static ImageData imageData = null;
+    private static Image imgLogo;
+
     protected PdfCanvas pdfCanvas = null;
     protected Document document = null;
     protected Object obj = null;
@@ -38,10 +39,11 @@ public abstract class PdfBaseDocument {
 
     private String telNr="1222";
     private String faxNr="14555";
+    private String email="wien.m.scheibelreiter@gmail.com";
 
     static {
         try {
-            imageData = ImageDataFactory.create(Objects.requireNonNull(PdfBaseDocument.class.getClassLoader().getResource("logo.jpg")));
+            ImageData imageData = ImageDataFactory.create(Objects.requireNonNull(PdfBaseDocument.class.getClassLoader().getResource("logo.jpg")));
             imgLogo = new Image(imageData);
             imgLogo.setWidth(250);
         } catch (Exception ex) {
@@ -60,6 +62,7 @@ public abstract class PdfBaseDocument {
         render();
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void addLogo(float x, float y)  {
         if (imgLogo != null) {
             imgLogo.setFixedPosition(x, y);
@@ -81,18 +84,21 @@ public abstract class PdfBaseDocument {
         Rectangle rectangle = new Rectangle(608.0f - this.document.getRightMargin() - 275, 620, 250f, 30f);
         addTextLign("DocID: ", docid, TextAlignment.RIGHT, rectangle, arialuniFont==null?bf1:arialuniFont, 11f);
 
-        logger.info("DocID: " + docid);
+        logger.info("DocID: {}", docid);
 
         rectangle = new Rectangle(608.0f - this.document.getRightMargin() - 125, 600, 100f, 30f);
-        addTextLign("", "Wien " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) , TextAlignment.RIGHT, rectangle, arialuniFont==null?bf1:arialuniFont, 11f);
+        addTextLign("", "Wien " + erstellungDat.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) , TextAlignment.RIGHT, rectangle, arialuniFont==null?bf1:arialuniFont, 11f);
 
         int i = 0;
         for (String s : SENDER) {
-            if (s.indexOf("{0}") != -1){
+            if (s.contains("{0}")){
                 s = s.replace("{0}", telNr);
             }
-            if (s.indexOf("{1}") != -1){
+            if (s.contains("{1}")){
                 s = s.replace("{1}", faxNr);
+            }
+            if (s.contains("{2}")){
+                s = s.replace("{2}", email);
             }
             rectangle = new Rectangle(345, 730 - i++ * 10, 200f, 30f);
             addTextLign("", s , TextAlignment.RIGHT, rectangle, arialuniFont==null?bf1:arialuniFont, 9f);
@@ -113,6 +119,7 @@ public abstract class PdfBaseDocument {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void addAdressBlock(float x, float startY, String... adr) {
         PdfFont arialuniFont = PdfFontFactory.createFont(fontProgram, "Identity-H",  PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
         int i = 0;
@@ -124,5 +131,27 @@ public abstract class PdfBaseDocument {
         }
     }
 
+    public String getTelNr() {
+        return telNr;
+    }
 
+    public void setTelNr(String telNr) {
+        this.telNr = telNr;
+    }
+
+    public String getFaxNr() {
+        return faxNr;
+    }
+
+    public void setFaxNr(String faxNr) {
+        this.faxNr = faxNr;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

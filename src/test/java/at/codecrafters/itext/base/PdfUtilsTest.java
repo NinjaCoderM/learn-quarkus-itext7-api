@@ -55,7 +55,7 @@ class PdfUtilsTest {
         IOException exception = assertThrows(IOException.class, () ->
                 PdfUtils.savePdf("PDF Content".getBytes(), invalidPath)
         );
-        assertTrue(exception instanceof IOException);
+        assertNotNull(exception);
     }
 
 }

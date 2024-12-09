@@ -45,6 +45,7 @@ class PdfPageEditorTest {
             try {
                 Files.deleteIfExists(modifiedFilePath);
             } catch (IOException e) {
+                //noinspection ThrowFromFinallyBlock
                 throw new RuntimeException(e);
             }
         }

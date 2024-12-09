@@ -20,10 +20,11 @@ public class PdfRenderer {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final static boolean[] bEveryPage = new boolean[] { true, false, false, false, false };
     private final static boolean[] bLastPage = new boolean[] { true, true, false, false, false };
+    @SuppressWarnings("unused")
     private final static boolean[] testModus = new boolean[] { true, true, true, true, true };
     private final static boolean[] noPrint = new boolean[] { true, true, false, false, true };
 
-    public <T> byte[] render(LetterType letterType, T data) throws Exception {
+    public <T> byte[] render(LetterType letterType, T data)  {
         if (!letterType.getDataClass().isInstance(data)) {
             throw new IllegalArgumentException("Invalid data type for " + letterType);
         }
@@ -37,10 +38,11 @@ public class PdfRenderer {
             PdfWriter writer = new PdfWriter(bsPass1);
             PdfDocument pdfDocument = new PdfDocument(writer);
             Document doc = new Document(pdfDocument);
+            doc.setMargins(margins[0], margins[1], margins[2], margins[3]);
             PdfCanvas pdfCanvas = new PdfCanvas(pdfDocument.addNewPage());
 
             boolean duplex = false;
-            boolean[] maxStricherl = null;
+            boolean[] maxStricherl = bLastPage;
 
             if (letterType==LetterType.KUNDEN_INFO){
                 KundenInfoPdf item = new KundenInfoPdf();
@@ -49,7 +51,7 @@ public class PdfRenderer {
                 maxStricherl=noPrint;
             }
 
-            logger.info("PDF " + letterType + " erstellt; Anzahl Seiten: " + pdfDocument.getNumberOfPages());
+            logger.info("PDF {} erstellt; Anzahl Seiten: {}", letterType, pdfDocument.getNumberOfPages());
 
             int n = pdfDocument.getNumberOfPages();
 

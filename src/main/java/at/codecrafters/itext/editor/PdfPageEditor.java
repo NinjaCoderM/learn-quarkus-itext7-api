@@ -28,9 +28,7 @@ public class PdfPageEditor {
              PdfDocument modPdfDoc = new PdfDocument(new PdfReader(Files.newInputStream(path.resolve(origFilename))), new PdfWriter(outputStream));
              PdfDocument replacePageDoc = new PdfDocument(new PdfReader(new ByteArrayInputStream(replacementPage)))){
 
-            logger.info("Start ... replace page number "
-                    + IntStream.range(replaceSelection.pageNumber(), replaceSelection.pageNumber() + replaceSelection.count()).mapToObj(String::valueOf).collect(Collectors.joining(", "))
-                    + " from original " + origFilename + ", add " + replacePageDoc.getNumberOfPages() + (replacePageDoc.getNumberOfPages()==1?" page":" pages"));
+            logger.info("Start ... replace page number {} from original {}, add {}{}", IntStream.range(replaceSelection.pageNumber(), replaceSelection.pageNumber() + replaceSelection.count()).mapToObj(String::valueOf).collect(Collectors.joining(", ")), origFilename, replacePageDoc.getNumberOfPages(), replacePageDoc.getNumberOfPages() == 1 ? " page" : " pages");
 
             IntStream.range(replaceSelection.pageNumber(), replaceSelection.pageNumber() + replaceSelection.count())
                     .map(i -> replaceSelection.pageNumber() - (i - (replaceSelection.pageNumber() + replaceSelection.count() - 1))).forEach(modPdfDoc::removePage);
