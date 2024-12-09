@@ -21,11 +21,52 @@ Content-Type: application/json
 <> 2024-12-09T075510.200.json
 ###
 
+GET http://localhost:8080/categories/3
+
+###
+
+PUT http://localhost:8080/categories/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Test*Category"
+}
+
+###
+
+POST http://localhost:8080/categories
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "Test-Category"
+}
+
+###
+
+DELETE http://localhost:8080/categories/4
+
+###
+
+POST http://localhost:8080/clients
+Content-Type: application/json
+
+{
+  "id": null,
+  "firstname": "Foo",
+  "lastname": "Zet",
+  "company": "Test-Company"
+}
 
 
 
+###
 
 
+GET http://localhost:8080/clients/1
+
+###
 
 
 
